@@ -1,0 +1,32 @@
+version: '3'
+services:
+  food_api:
+    container_name: food_api
+    image: beta-ecommerce-api-v2-1.0.0
+    build: .
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      - food_db
+    restart: no
+
+  food_db:
+    container_name: food_db
+    image: "postgres:15.2-bullseye"
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    env_file:
+      - database.env
+    volumes:
+      - ./database-data:/var/lib/postgresql/data
+    restart: no
+
+
+volumes:
+  database-data:
