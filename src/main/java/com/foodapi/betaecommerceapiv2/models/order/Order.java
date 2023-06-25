@@ -2,6 +2,12 @@ package com.foodapi.betaecommerceapiv2.models.order;
 
 //Data Structure for order
 
+import com.foodapi.betaecommerceapiv2.models.customer.Customer;
+
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
+
 @Entity
 @Table(name="order")
 public class Order {
@@ -25,7 +31,7 @@ public class Order {
     @JoinColumn(name = "order_id",referencedColumnName = "id",insertable = false,updatable = false)
     private List<OrderItem> orderItems;
 
-    @ManyToOne(cascade = CascadeType.ALL, nullable = false)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Customer customer;
 
