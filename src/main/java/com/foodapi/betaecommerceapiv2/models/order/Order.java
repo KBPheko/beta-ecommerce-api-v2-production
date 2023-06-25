@@ -6,6 +6,7 @@ package com.foodapi.betaecommerceapiv2.models.order;
 @Table(name="order")
 public class Order {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,10 +26,12 @@ public class Order {
     @JoinColumn(name = "customer_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Customer customer;
 
+    //default constructer
     public Order(){
         super();
     }
 
+    //parameterized constructer
     public Order(Long id, Date createdDate, Double totalPrice, List<OrderItem> orderItems, Customer customer) {
         this.id = id;
         this.createdDate = createdDate;
@@ -37,6 +40,7 @@ public class Order {
         this.customer = customer;
     }
 
+    //getters and setters
     public Long getId() {
         return id;
     }
