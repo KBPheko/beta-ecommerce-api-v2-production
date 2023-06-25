@@ -17,7 +17,10 @@ public class Order {
     @Column(name = "total_price", nullable = false)
     private Double totalPrice;
 
-    //needs review
+    /*
+     represents the collection of order items associated with an order,
+     allowing for multiple items to be stored within a single order.
+    */
     @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
     @JoinColumn(name = "order_id",referencedColumnName = "id",insertable = false,updatable = false)
     private List<OrderItem> orderItems;
