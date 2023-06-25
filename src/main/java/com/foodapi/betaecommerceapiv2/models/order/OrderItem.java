@@ -33,6 +33,10 @@ public class OrderItem {
     @JoinColumn(name = "order_id",referencedColumnName = "id",insertable = false,updatable = false)
     private Order order;
 
+//    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//    @JoinColumn(name ="order_id")
+//    private OrderModel order;
+
     @OneToOne
     @JoinColumn(name = "productId",referencedColumnName = "id",insertable = false,updatable = false)
     private Product product;
