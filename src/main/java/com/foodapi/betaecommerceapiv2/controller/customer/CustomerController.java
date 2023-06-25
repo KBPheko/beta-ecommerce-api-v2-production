@@ -55,7 +55,7 @@ public class CustomerController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // This method is used to retrieve all users
+    // This method is used to retrieve all customers
     @Operation(summary = "Retrieve all customers", description = "This endpoint is used to retrieve all customers")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully retrieved all users"),
@@ -69,7 +69,7 @@ public class CustomerController {
         return ResponseHandler.generateResponse("Successfully retrieved all Customers", HttpStatus.OK, customerService.getAllCustomers().join());
     }
 
-    // This method is used to retrieve a user by email
+    // This method is used to retrieve a customer by email
     @Operation(summary = "Retrieve a user by email", description = "This endpoint is used to retrieve a user by email")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully retrieved customer"),
@@ -86,7 +86,7 @@ public class CustomerController {
         return ResponseHandler.generateResponse("Successfully retrieved customer", HttpStatus.OK, customerService.getCustomerByEmail(email).join());
     }
 
-    // This method is used to register a user
+    // This method is used to register a new customer
     @Operation(summary = "Register a customer", description = "This endpoint is used to register a customer")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Successfully registered customer"),
@@ -100,7 +100,7 @@ public class CustomerController {
         return ResponseHandler.generateResponse("Successfully registered customer", HttpStatus.CREATED, null);
     }
 
-    // This method is used to authenticate a user
+    // This method is used to authenticate an in-coming customer
     @Operation(summary = "Authenticate a customer", description = "This endpoint is used to authenticate a customer")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully authenticated customer"),
@@ -120,7 +120,7 @@ public class CustomerController {
         }
     }
 
-    // This method is used to update a user
+    // This method is used to update an existing customer
     @Operation(summary = "Update a customer", description = "This endpoint is used to update a customer")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully updated customer"),

@@ -3,6 +3,7 @@ package com.foodapi.betaecommerceapiv2.security;
 import com.foodapi.betaecommerceapiv2.service.jwt.JwtService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,10 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * This class is used to filter the requests and check for the jwt token
- */
-@Component
+
+//@Component
+@Configuration
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
@@ -33,7 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {
         this.jwtUtil = jwtUtil;
     }
 
-    // This method is used to filter the requests and check for the jwt token
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authorizationHeader = request.getHeader("Authorization");
