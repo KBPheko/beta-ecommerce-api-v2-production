@@ -4,6 +4,7 @@ import com.foodapi.betaecommerceapiv2.models.product.Product;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "cart")
@@ -25,27 +26,24 @@ public class Cart {
     @Column(name = "totalPrice")
     private Date totalPrice;
 
-    @OneToMany(mappedBy = "cartItem")
-    private CartItem cartItem;
+    @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<CartItem> cartItems;
 
     // Default constructor
-
     public Cart() {
     }
 
     // Constructor with parameters
-
-    public Cart(Long cartId, Long userId, Date dateCreated, Date dateUpdated, Date totalPrice, CartItem cartItem) {
+    public Cart(Long cartId, Long userId, Date dateCreated, Date dateUpdated, Date totalPrice, List<CartItem> cartItems) {
         this.cartId = cartId;
         this.userId = userId;
         this.dateCreated = dateCreated;
         this.dateUpdated = dateUpdated;
         this.totalPrice = totalPrice;
-        this.cartItem = cartItem;
+        this.cartItems = cartItems;
     }
 
     // Getters and Setters
-
     public Long getCartId() {
         return cartId;
     }
@@ -86,11 +84,11 @@ public class Cart {
         this.totalPrice = totalPrice;
     }
 
-    public CartItem getCartItem() {
-        return cartItem;
+    public List<CartItem> getCartItem() {
+        return cartItems;
     }
 
-    public void setCartItem(CartItem cartItem) {
-        this.cartItem = cartItem;
+    public void setCartItem(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 }

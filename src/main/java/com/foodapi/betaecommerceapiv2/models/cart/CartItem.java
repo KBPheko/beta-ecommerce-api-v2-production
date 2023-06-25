@@ -1,5 +1,7 @@
 package com.foodapi.betaecommerceapiv2.models.cart;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -11,6 +13,7 @@ public class CartItem {
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "cartId")
     private Cart cart;
 
@@ -20,15 +23,19 @@ public class CartItem {
     @Column(name = "quantity")
     private int quantity;
 
+    @Column(name = "price")
+    private Double price;
+
     public CartItem() {
         super();
     }
 
-    public CartItem(Long id, Cart cart, Long productId, int quantity) {
+    public CartItem(Long id, Cart cart, Long productId, int quantity, Double price) {
         this.id = id;
         this.cart = cart;
         this.productId = productId;
         this.quantity = quantity;
+        this.price = price;
     }
 
     //Getters and Setters
@@ -63,5 +70,13 @@ public class CartItem {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }

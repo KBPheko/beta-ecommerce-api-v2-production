@@ -25,8 +25,12 @@ public class ProductServiceImpl implements ProductService{
 
     /** Returns a list of products*/
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<Product> getAllProducts() throws ProductNotFoundException {
+        List<Product> allProducts = productRepository.findAll();
+        if (allProducts.isEmpty()){
+            throw new ProductNotFoundException("Products Not Found");
+        }
+        return allProducts;
     }
 
     /** Returns one product by product id*/
@@ -66,6 +70,8 @@ public class ProductServiceImpl implements ProductService{
         Date dateUpdated = new Date();
         // Update the dateUpdated field
         existingProduct.setDateUpdated(dateUpdated);
+        Date updatedAt = new Date();
+        existingCategory.setDateUpdated(category.getDateUpdated());
 
         return productRepository.save(existingProduct);
     }
