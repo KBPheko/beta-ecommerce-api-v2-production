@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    List<Product> getAllProducts() throws ProductNotFoundException;
+    List<Product> getAllProducts();
 
     Product getProductById(Long productId) throws ProductNotFoundException;
 
