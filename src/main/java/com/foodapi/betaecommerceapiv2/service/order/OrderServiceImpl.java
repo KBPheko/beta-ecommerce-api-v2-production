@@ -10,7 +10,6 @@ import com.foodapi.betaecommerceapiv2.service.cart.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-<<<<<<< HEAD
 import com.foodapi.betaecommerceapiv2.models.order.Order;
 import com.foodapi.betaecommerceapiv2.models.product.Product;
 import com.foodapi.betaecommerceapiv2.repository.order.OrderRepository;
@@ -78,10 +77,3 @@ import java.util.concurrent.CompletableFuture;
             return CompletableFuture.completedFuture(order.join());
         }
     }
-
-
-=======
-public class OrderServiceImpl {
-
-}
->>>>>>> OrderItem

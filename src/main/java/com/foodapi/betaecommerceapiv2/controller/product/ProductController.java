@@ -7,11 +7,14 @@ import com.foodapi.betaecommerceapiv2.exceptions.product.ProductNotFoundExceptio
 import com.foodapi.betaecommerceapiv2.models.product.Product;
 import com.foodapi.betaecommerceapiv2.service.product.ProductServiceImpl;
 import com.foodapi.betaecommerceapiv2.util.ResponseHandler;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,6 +66,8 @@ public class ProductController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input provided"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Product already exists")
     })
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping("/create")
     public ResponseEntity<Object> createProduct(@Validated @RequestBody Product product) throws ProductExistsException {
         List<Product> products = productService.getAllProducts();
@@ -81,25 +86,27 @@ public class ProductController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input provided"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Product not found")
     })
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<Object> updateProduct(@PathVariable Long productId, @Validated @RequestBody Product product) throws ProductNotFoundException{
         Product updatedProd = productService.updateExistingProduct(productId, product);
         return ResponseHandler.generateResponse("Successfully updated product", HttpStatus.OK, updatedProd);
     }
 
-    /** Delete existing product*/
     @DeleteMapping("/delete/{productId}")
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully deleted product"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input provided"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Product Not Found")
     })
-    public ResponseEntity<Object> deleteProduct(@PathVariable Long productId) throws ProductNotFoundException, BadRequestException {
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public ResponseEntity<Object> deleteProduct(@PathVariable Long productId) {
         try {
-
             productService.deleteProduct(productId);
             return ResponseEntity.ok().body("Successfully deleted");
         } catch (ProductNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete product");
         }
@@ -113,6 +120,9 @@ public class ProductController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Invalid Search")
     })
     @GetMapping("/search")
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("hasRole('ROLE_USER')")
+
     public ResponseEntity<Object> searchProducts(@RequestParam(required = false) String productName,
                                                  @RequestParam(required = false) String categoryName) throws InvalidFilterException {
         try {
