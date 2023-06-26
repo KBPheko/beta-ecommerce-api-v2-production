@@ -6,8 +6,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * This class generates a response object*/
+//This class generates a response object
 public class ResponseHandler {
 
     public static ResponseEntity<Object> generateResponse(String customMessage, HttpStatus httpStatus, Object responseObject){
@@ -17,5 +16,6 @@ public class ResponseHandler {
         response.put("Data: ", responseObject);
 
         return new ResponseEntity<>(response, httpStatus);
+
     }
 }
