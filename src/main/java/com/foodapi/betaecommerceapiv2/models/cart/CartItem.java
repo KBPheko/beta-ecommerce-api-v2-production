@@ -1,13 +1,8 @@
 package com.foodapi.betaecommerceapiv2.models.cart;
 
-<<<<<<< HEAD
-import javax.persistence.Id;
 
-
-public class CartItem {
-
-=======
 import javax.persistence.*;
+
 
 @Entity
 @Table(name = "cart_item")
@@ -71,5 +66,5 @@ public class CartItem {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
->>>>>>> 7d2a9f14222fd50f692c17e259064bef966a115a
+
 }

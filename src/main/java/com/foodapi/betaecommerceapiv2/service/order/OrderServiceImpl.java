@@ -16,16 +16,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-
-    // injection for the order item
-
-
-
-    // method to save an item in a particular order
-//    public void addOrderedProducts(OrderItem orderItem) {
-//        orderItemsRepository.save(orderItem);
-//    }
-
     /**
      * This class implements the methods that provides CRUD operations for the order table
      */
