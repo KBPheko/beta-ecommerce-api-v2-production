@@ -1,96 +1,102 @@
 package com.foodapi.betaecommerceapiv2.models.cart;
 
+
 import com.foodapi.betaecommerceapiv2.models.product.Product;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * This class defines the cart model
+ */
 @Entity
+@Schema(name = "Cart", description = "Cart model")
 @Table(name = "cart")
 public class Cart {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cartId;
+    @Schema(description = "Cart id", example = "1")
+    private Long id;
 
-    @Column(name = "userId")
-    private Long userId;
+    @Column(name = "created_at")
+    @Schema(description = "Cart created at", example = "2021-09-01 00:00:00")
+    private Date createdAt;
 
-    @Column(name = "dateCreated")
-    private Date dateCreated;
+    @Column(name = "updated_at")
+    @Schema(description = "Cart updated at", example = "2021-09-01 00:00:00")
+    private Date updatedAt;
 
-    @Column(name = "dateUpdated")
-    private Date dateUpdated;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
-    @Column(name = "totalPrice")
-    private Date totalPrice;
+    @Column(name = "customer")
+    @Schema(description = "Cart customer", example = "abc123@gmail.com")
+    private String customer;
 
-    @OneToMany(mappedBy = "cartItem")
-    private CartItem cartItem;
+    @Column(name = "quantity")
+    @Schema(description = "Cart quantity", example = "1")
+    private Integer quantity;
 
-    // Default constructor
 
     public Cart() {
+        super();
     }
 
-    // Constructor with parameters
-
-    public Cart(Long cartId, Long userId, Date dateCreated, Date dateUpdated, Date totalPrice, CartItem cartItem) {
-        this.cartId = cartId;
-        this.userId = userId;
-        this.dateCreated = dateCreated;
-        this.dateUpdated = dateUpdated;
-        this.totalPrice = totalPrice;
-        this.cartItem = cartItem;
+    public Cart(Product product, String customer, Integer quantity) {
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
+        this.product = product;
+        this.customer = customer;
+        this.quantity = quantity;
     }
 
-    // Getters and Setters
-
-    public Long getCartId() {
-        return cartId;
+    public Long getId() {
+        return id;
     }
 
-    public void setCartId(Long cartId) {
-        this.cartId = cartId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public Date getDateCreated() {
-        return dateCreated;
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
-    public Date getDateUpdated() {
-        return dateUpdated;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setDateUpdated(Date dateUpdated) {
-        this.dateUpdated = dateUpdated;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
-    public Date getTotalPrice() {
-        return totalPrice;
+    public String getCustomer() {
+        return customer;
     }
 
-    public void setTotalPrice(Date totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setCustomer(String customer) {
+        this.customer = customer;
     }
 
-    public CartItem getCartItem() {
-        return cartItem;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setCartItem(CartItem cartItem) {
-        this.cartItem = cartItem;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 }
