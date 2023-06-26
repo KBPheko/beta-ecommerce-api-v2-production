@@ -1,68 +1,72 @@
 package com.foodapi.betaecommerceapiv2.models.cart;
 
+
 import javax.persistence.*;
 
 
-@Entity
-@Table(name = "cart_item")
-public class CartItem {
+    @Entity
+    @Table(name = "cart_item")
+    public class CartItem {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "cartId")
-    private Cart cart;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
 
-    @Column(name = "productId")
-    private Long productId;
+        @ManyToOne
+        @JoinColumn(name = "cartId")
+        private Cart cart;
 
-    @Column(name = "quantity")
-    private int quantity;
+        @Column(name = "productId")
+        private Long productId;
 
-    public CartItem() {
-        super();
-    }
+        @Column(name = "quantity")
+        private int quantity;
 
-    public CartItem(Long id, Cart cart, Long productId, int quantity) {
-        this.id = id;
-        this.cart = cart;
-        this.productId = productId;
-        this.quantity = quantity;
-    }
+        public CartItem() {
+            super();
+        }
 
-    //Getters and Setters
+        public CartItem(Long id, Cart cart, Long productId, int quantity) {
+            this.id = id;
+            this.cart = cart;
+            this.productId = productId;
+            this.quantity = quantity;
+        }
 
-    public Long getId() {
-        return id;
-    }
+        //Getters and Setters
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+        public Long getId() {
+            return id;
+        }
 
-    public Cart getCart() {
-        return cart;
-    }
+        public void setId(Long id) {
+            this.id = id;
+        }
 
-    public void setCart(Cart cart) {
-        this.cart = cart;
-    }
+        public Cart getCart() {
+            return cart;
+        }
 
-    public Long getProductId() {
-        return productId;
-    }
+        public void setCart(Cart cart) {
+            this.cart = cart;
+        }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
+        public Long getProductId() {
+            return productId;
+        }
 
-    public int getQuantity() {
-        return quantity;
-    }
+        public void setProductId(Long productId) {
+            this.productId = productId;
+        }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
+        public int getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(int quantity) {
+            this.quantity = quantity;
+        }
+
 }
+
