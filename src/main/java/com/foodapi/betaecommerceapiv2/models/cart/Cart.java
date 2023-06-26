@@ -35,9 +35,11 @@ public class Cart {
     @Schema(description = "Cart customer", example = "abc123@gmail.com")
     private String customer;
 
+
     @Column(name = "quantity")
     @Schema(description = "Cart quantity", example = "1")
     private Integer quantity;
+
 
 
     public Cart() {

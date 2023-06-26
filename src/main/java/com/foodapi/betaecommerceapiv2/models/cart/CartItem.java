@@ -1,9 +1,11 @@
 package com.foodapi.betaecommerceapiv2.models.cart;
+
 import javax.persistence.*;
 
-    @Entity
-    @Table(name = "cart_item")
-    public class CartItem {
+@Entity
+@Table(name = "cart_item")
+public class CartItem {
+
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,4 +66,6 @@ import javax.persistence.*;
             this.quantity = quantity;
         }
     }
+
+
 
