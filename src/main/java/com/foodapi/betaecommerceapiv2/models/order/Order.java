@@ -2,54 +2,57 @@ package com.foodapi.betaecommerceapiv2.models.order;
 
 //Data Structure for order
 
-import com.foodapi.betaecommerceapiv2.models.customer.Customer;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * This class defines the order model
+ */
 @Entity
-@Table(name="order")
+@Schema(name = "Order", description = "Order model")
+@Table(name = "order")
 public class Order {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Order id", example = "1")
     private Long id;
 
-    @Column(name = "created_date", nullable = false)
-    private Date createdDate;
+    @Column(name = "created_at")
+    @Schema(description = "Order created at", example = "2022-04-11 00:00:00")
+    private Date createdAt;
 
-    @Column(name = "total_price", nullable = false)
-    private Double totalPrice;
+    @Column(name = "updated_at")
+    @Schema(description = "Order updated at", example = "2022-04-14 00:00:00")
+    private Date updatedAt;
 
-    /*
-     represents the collection of order items associated with an order,
-     allowing for multiple items to be stored within a single order.
-    */
-    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
-    @JoinColumn(name = "order_id",referencedColumnName = "id",insertable = false,updatable = false)
+    @Column(name = "customer")
+    @Schema(description = "Order customer", example = "johnDoe@gmail.com")
+    private String customer;
+
+    @Column(name = "total_amount")
+    @Schema(description = "Order total amount", example = "100.00")
+    private Double totalAmount;
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "customer_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Customer customer;
-
-    //default constructer
     public Order(){
         super();
     }
 
-    //parameterized constructer
-    public Order(Long id, Date createdDate, Double totalPrice, List<OrderItem> orderItems, Customer customer) {
+    public Order(Long id, Date createdAt, Date updatedAt, String customer, Double totalAmount, List<OrderItem> orderItems) {
         this.id = id;
-        this.createdDate = createdDate;
-        this.totalPrice = totalPrice;
-        this.orderItems = orderItems;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         this.customer = customer;
+        this.totalAmount = totalAmount;
+        this.orderItems = orderItems;
     }
 
-    //getters and setters
     public Long getId() {
         return id;
     }
@@ -58,20 +61,36 @@ public class Order {
         this.id = id;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public Double getTotalPrice() {
-        return totalPrice;
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setTotalPrice(Double totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
+    }
+
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     public List<OrderItem> getOrderItems() {
@@ -81,12 +100,5 @@ public class Order {
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
     }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
 }
+
