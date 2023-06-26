@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-@RequestMapping(value = "/api/orders")
+@RequestMapping(value = "/api/v2/orders")
 public class OrderController {
  //responsible for the Restful APi
 
@@ -40,7 +40,7 @@ public class OrderController {
 
 
     // get all orders
-    @GetMapping
+    @GetMapping(value = "/orders")
     public ResponseEntity<Object> listAllOrders() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = authentication.getName();
@@ -58,7 +58,7 @@ public class OrderController {
     }
 
     //add an order
-    @PostMapping
+    @PostMapping(value ="/order")
     public ResponseEntity<Object> placeOrder() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = authentication.getName();

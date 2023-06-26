@@ -25,7 +25,7 @@ public class Cart {
     @Column(name = "totalPrice")
     private Date totalPrice;
 
-    @OneToMany(mappedBy = "cartItem")
+    @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER,cascade = CascadeType.ALL )
     private CartItem cartItem;
 
     // Default constructor
