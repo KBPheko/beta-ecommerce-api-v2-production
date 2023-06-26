@@ -15,11 +15,11 @@ public interface OrderService {
     //for checking out
     void checkOut(String customer);
     //getting a list of the order for a product
-    CompletableFuture<List<Order>> getAllOders(String customer);
+    CompletableFuture<List<Order>> getAllOrders(String customer);
     // throw an exception if the order is not found
     CompletableFuture<Order> getOrder(Long id) throws OrderNotFoundException;
 
-    CompletableFuture<List<Order>> getAllOrders(String user);
+//    CompletableFuture<List<Order>> getAllOrders(String user);
 
     //code
     
