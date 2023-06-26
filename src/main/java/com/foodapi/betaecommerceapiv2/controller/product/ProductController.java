@@ -95,6 +95,7 @@ public class ProductController {
     })
     public ResponseEntity<Object> deleteProduct(@PathVariable Long productId) throws ProductNotFoundException, BadRequestException {
         try {
+
             productService.deleteProduct(productId);
             return ResponseEntity.ok().body("Successfully deleted");
         } catch (ProductNotFoundException e) {
