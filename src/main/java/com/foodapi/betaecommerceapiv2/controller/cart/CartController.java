@@ -45,24 +45,24 @@ public class CartController {
         this.productService = productService;
     }
 
-    // This is an endpoint for adding a product to the cart
-    @Operation(summary = "Add a product to the cart", description = "This endpoint is used to add a product to the cart", security = @SecurityRequirement(name = "bearerAuth"))
+    // This is an endpoint for deleting a cart item
+    @Operation(summary = "Delete a cart item", description = "This endpoint is used to delete a cart item", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Product added to cart successfully"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Product not found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Cart item deleted successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Cart not found"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
     })
-
-
-    @PostMapping
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    public ResponseEntity<Object> addToCart(@RequestBody AddToCartDto addToCartDto) throws ProductNotFoundException {
+    public ResponseEntity<Object> deleteCartItem(@PathVariable Long id) throws CartNotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = authentication.getName();
-       // CompletableFuture<Product> product = productService.getProductById(addToCartDto.getProductId());
-        //cartService.addToCart(addToCartDto, product.join(), user);
-        return ResponseHandler.generateResponse("Product added to cart successfully", HttpStatus.OK, null);
+        cartService.deleteCartItem(id, user);
+        return ResponseHandler.generateResponse("Cart item deleted successfully", HttpStatus.OK, null);
     }
+
+
+
 
     // This is an endpoint for listing all the cart items
     @Operation(summary = "List all cart items", description = "This endpoint is used to list all the cart items", security = @SecurityRequirement(name = "bearerAuth"))
@@ -97,19 +97,25 @@ public class CartController {
         return ResponseHandler.generateResponse("Cart item updated successfully", HttpStatus.OK, null);
     }
 
-    // This is an endpoint for deleting a cart item
-    @Operation(summary = "Delete a cart item", description = "This endpoint is used to delete a cart item", security = @SecurityRequirement(name = "bearerAuth"))
+    // This is an endpoint for adding a product to the cart
+    @Operation(summary = "Add a product to the cart", description = "This endpoint is used to add a product to the cart", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Cart item deleted successfully"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Cart not found"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Product added to cart successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Product not found"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @DeleteMapping("/{id}")
+
+
+    @PostMapping
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    public ResponseEntity<Object> deleteCartItem(@PathVariable Long id) throws CartNotFoundException {
+    public ResponseEntity<Object> addToCart(@RequestBody AddToCartDto addToCartDto) throws ProductNotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = authentication.getName();
-        cartService.deleteCartItem(id, user);
-        return ResponseHandler.generateResponse("Cart item deleted successfully", HttpStatus.OK, null);
+        // CompletableFuture<Product> product = productService.getProductById(addToCartDto.getProductId());
+        //cartService.addToCart(addToCartDto, product.join(), user);
+        return ResponseHandler.generateResponse("Product added to cart successfully", HttpStatus.OK, null);
     }
+
+
+
 }
