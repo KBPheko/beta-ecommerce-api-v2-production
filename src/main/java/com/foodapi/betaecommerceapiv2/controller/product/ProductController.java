@@ -120,9 +120,6 @@ public class ProductController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Invalid Search")
     })
     @GetMapping("/search")
-    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
-    @PreAuthorize("hasRole('ROLE_USER')")
-
     public ResponseEntity<Object> searchProducts(@RequestParam(required = false) String productName,
                                                  @RequestParam(required = false) String categoryName) throws InvalidFilterException {
         try {
