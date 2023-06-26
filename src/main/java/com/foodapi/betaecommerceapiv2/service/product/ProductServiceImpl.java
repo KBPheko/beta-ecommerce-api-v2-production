@@ -7,13 +7,16 @@ import com.foodapi.betaecommerceapiv2.models.product.Category;
 import com.foodapi.betaecommerceapiv2.models.product.Product;
 import com.foodapi.betaecommerceapiv2.repository.product.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+//@Transactional
 public class ProductServiceImpl implements ProductService{
 
     private ProductRepository productRepository;
@@ -42,7 +45,14 @@ public class ProductServiceImpl implements ProductService{
 
     /** adds new product*/
     @Override
+    @Transactional(rollbackOn = ProductExistsException.class) //wont add to db if exception is being thrown
     public Product createProduct(Product product) throws ProductExistsException {
+        List<Product> products = getAllProducts();
+        for (Product product1: products) {
+            if (product1.getProductName() == product.getProductName()) {
+                throw new ProductExistsException("Product already exists");
+            }
+        }
         return productRepository.save(product);
     }
 
@@ -74,15 +84,11 @@ public class ProductServiceImpl implements ProductService{
     }
 
     /** deletes existing product*/
-    @Override
+    //@Transactional(rollbackOn = ProductNotFoundException.class)
     public void deleteProduct(Long productId) throws ProductNotFoundException {
-        Optional<Product> productOptional = productRepository.findById(productId);
-        if (productOptional.isPresent()) {
-            Product product = productOptional.get();
-            productRepository.delete(product);
-        } else {
-            throw new ProductNotFoundException("Product Not Found");
-        }
+        Product prodItem = productRepository.findById(productId).orElseThrow(() ->
+                new ProductNotFoundException("Not found"));
+        productRepository.delete(prodItem);
     }
 
 

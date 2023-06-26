@@ -1,13 +1,10 @@
 package com.foodapi.betaecommerceapiv2.controller.product;
 
-import com.foodapi.betaecommerceapiv2.exceptions.APIResponseHandler;
-import com.foodapi.betaecommerceapiv2.exceptions.ApiError;
 import com.foodapi.betaecommerceapiv2.exceptions.common.BadRequestException;
 import com.foodapi.betaecommerceapiv2.exceptions.product.InvalidFilterException;
 import com.foodapi.betaecommerceapiv2.exceptions.product.ProductExistsException;
 import com.foodapi.betaecommerceapiv2.exceptions.product.ProductNotFoundException;
 import com.foodapi.betaecommerceapiv2.models.product.Product;
-import com.foodapi.betaecommerceapiv2.service.product.ProductService;
 import com.foodapi.betaecommerceapiv2.service.product.ProductServiceImpl;
 import com.foodapi.betaecommerceapiv2.util.ResponseHandler;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -61,13 +58,19 @@ public class ProductController {
     }
 
     /** Create new product*/
-    @PostMapping("/create")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully created product"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input provided"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Product already exists")
     })
+    @PostMapping("/create")
     public ResponseEntity<Object> createProduct(@Validated @RequestBody Product product) throws ProductExistsException {
+        List<Product> products = productService.getAllProducts();
+        for (Product product1: products){
+            if (product1.getProductName().equals(product.getProductName())){
+                throw new ProductExistsException("Product already exists");
+            }
+        }
         return ResponseHandler.generateResponse("Successfully created product", HttpStatus.CREATED, productService.createProduct(product));
     }
 
@@ -90,18 +93,17 @@ public class ProductController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input provided"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Product Not Found")
     })
-    public ResponseEntity<Object> deleteProduct(@PathVariable Long productId) throws ProductNotFoundException {
+    public ResponseEntity<Object> deleteProduct(@PathVariable Long productId) throws ProductNotFoundException, BadRequestException {
         try {
             productService.deleteProduct(productId);
-            return ResponseHandler.generateResponse("Successfully deleted product", HttpStatus.OK, null);
+            return ResponseEntity.ok().body("Successfully deleted");
         } catch (ProductNotFoundException e) {
-            // Log the exception or handle it as needed
-            throw new ProductNotFoundException("Product not found");
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            // Log the exception or handle it as needed
-            return ResponseHandler.generateResponse("Failed to delete product", HttpStatus.INTERNAL_SERVER_ERROR, null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete product");
         }
     }
+
 
     /** Search and Filter products*/
     @ApiResponses(value = {
