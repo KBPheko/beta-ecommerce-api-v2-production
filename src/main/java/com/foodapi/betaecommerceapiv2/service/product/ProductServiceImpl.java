@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService{
@@ -27,8 +28,8 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public List<Product> getAllProducts() {
         List<Product> allProducts = productRepository.findAll();
-        if (allProducts.isEmpty()){
-            return null;
+        if(allProducts.isEmpty()){
+            return allProducts;
         }
         return allProducts;
     }
@@ -42,11 +43,7 @@ public class ProductServiceImpl implements ProductService{
     /** adds new product*/
     @Override
     public Product createProduct(Product product) throws ProductExistsException {
-        Product savedProduct = productRepository.save(product);
-        if (savedProduct != null){
-            throw new ProductExistsException("Product Already Exists!");
-        }
-        return savedProduct;
+        return productRepository.save(product);
     }
 
     /** updates existing product*/
@@ -79,10 +76,15 @@ public class ProductServiceImpl implements ProductService{
     /** deletes existing product*/
     @Override
     public void deleteProduct(Long productId) throws ProductNotFoundException {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product Not Found"));
-
-        productRepository.deleteById(productId);
+        Optional<Product> productOptional = productRepository.findById(productId);
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+            productRepository.delete(product);
+        } else {
+            throw new ProductNotFoundException("Product Not Found");
+        }
     }
+
 
     @Override
     public List<Product> searchProducts(String productName, String categoryName) throws InvalidFilterException {

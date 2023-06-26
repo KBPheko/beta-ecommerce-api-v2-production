@@ -25,11 +25,11 @@ import java.util.List;
 @RequestMapping(value = "/api/product")
 public class ProductController {
 
-    private final ProductService productService;
+    private final ProductServiceImpl productService;
 
     // Inject service
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(ProductServiceImpl productService) {
         this.productService = productService;
     }
 
@@ -45,7 +45,7 @@ public class ProductController {
         if (!listOfProducts.isEmpty()){
             return ResponseHandler.generateResponse("Products Retrieved Successfully!", HttpStatus.OK, listOfProducts);
         } else {
-            return ResponseHandler.generateResponse("No Products Found", HttpStatus.NOT_FOUND, null);
+            return ResponseHandler.generateResponse("No Products Found", HttpStatus.NO_CONTENT, null);
         }
     }
 
@@ -91,7 +91,16 @@ public class ProductController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Product Not Found")
     })
     public ResponseEntity<Object> deleteProduct(@PathVariable Long productId) throws ProductNotFoundException {
-        return ResponseHandler.generateResponse("Successfully deleted product", HttpStatus.OK, null);
+        try {
+            productService.deleteProduct(productId);
+            return ResponseHandler.generateResponse("Successfully deleted product", HttpStatus.OK, null);
+        } catch (ProductNotFoundException e) {
+            // Log the exception or handle it as needed
+            throw new ProductNotFoundException("Product not found");
+        } catch (Exception e) {
+            // Log the exception or handle it as needed
+            return ResponseHandler.generateResponse("Failed to delete product", HttpStatus.INTERNAL_SERVER_ERROR, null);
+        }
     }
 
     /** Search and Filter products*/
