@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,8 @@ import java.util.List;
 public class ProductController {
 
     private final ProductServiceImpl productService;
+
+    Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     // Inject service
     @Autowired
@@ -101,14 +105,15 @@ public class ProductController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Product Not Found")
     })
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    public ResponseEntity<Object> deleteProduct(@PathVariable Long productId) {
+    public ResponseEntity<Object> deleteProduct(@PathVariable Long productId) throws ProductNotFoundException, BadRequestException {
         try {
             productService.deleteProduct(productId);
-            return ResponseEntity.ok().body("Successfully deleted");
+            return ResponseHandler.generateResponse("Successfully deleted product", HttpStatus.OK, null);
         } catch (ProductNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+            //return ResponseHandler.generateResponse("Product Not Found", HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+            throw new ProductNotFoundException("Product Not Found");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete product");
+            throw new BadRequestException("Internal Server Error");
         }
     }
 
@@ -123,20 +128,22 @@ public class ProductController {
     public ResponseEntity<Object> searchProducts(@RequestParam(required = false) String productName,
                                                  @RequestParam(required = false) String categoryName) throws InvalidFilterException {
         try {
+            logger.info("Received search request with productName: {} and categoryName: {}", productName, categoryName);
+
             List<Product> searchResults = productService.searchProducts(productName, categoryName);
 
             if (searchResults.isEmpty()) {
-
+                logger.info("Search results: Not found");
                 return ResponseHandler.generateResponse("Not Found!!!", HttpStatus.NOT_FOUND, null);
-
+            } else {
+                logger.info("Search results size: {}", searchResults.size());
+                return ResponseHandler.generateResponse("Search Results", HttpStatus.FOUND, searchResults);
             }
-            return ResponseHandler.generateResponse("Search Found!!!", HttpStatus.OK, searchResults);
-
         } catch (Exception e) {
             String errorMsg = e.getLocalizedMessage();
             errorMsg = "INTERNAL SERVER ERROR!!!";
+            logger.error("Error occurred during search", e);
             return ResponseHandler.generateResponse(errorMsg, HttpStatus.INTERNAL_SERVER_ERROR, null);
         }
-
     }
 }
