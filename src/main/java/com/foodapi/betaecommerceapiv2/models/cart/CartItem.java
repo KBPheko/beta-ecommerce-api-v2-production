@@ -64,4 +64,5 @@ import javax.persistence.*;
             this.quantity = quantity;
         }
     }
-}
+
+
