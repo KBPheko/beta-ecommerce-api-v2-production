@@ -9,7 +9,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface OrderService {
     // this file is the declaration of the methods and also provides the CRUD operations
-    //calling a fucntion to save an iteam in a particular order froor the order item
+    //calling a function to save an item in a particular order for the order item
     void addOrderedProducts(OrderItem orderItem);
 
     //for checking out
