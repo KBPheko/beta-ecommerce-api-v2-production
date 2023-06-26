@@ -1,8 +1,12 @@
+
 package com.foodapi.betaecommerceapiv2.service.order;
 
 import com.foodapi.betaecommerceapiv2.exceptions.order.OrderNotFoundException;
+import com.foodapi.betaecommerceapiv2.models.cart.dto.CartDto;
+import com.foodapi.betaecommerceapiv2.models.cart.dto.CartItemDto;
 import com.foodapi.betaecommerceapiv2.models.order.OrderItem;
 import com.foodapi.betaecommerceapiv2.repository.order.OrderItemsRepository;
+import com.foodapi.betaecommerceapiv2.service.cart.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,15 +26,15 @@ import java.util.concurrent.CompletableFuture;
     @Service
     public class OrderServiceImpl implements OrderService {
 
-        // private final CartService cartService;
+         private final CartService cartService;
 
         private final OrderRepository orderRepository;
 
         private final OrderItemsRepository orderItemRepository;
 
         @Autowired
-        public OrderServiceImpl(OrderRepository orderRepository, OrderItemsRepository orderItemRepository) {
-            //this.cartService = cartService;
+        public OrderServiceImpl(OrderRepository orderRepository, OrderItemsRepository orderItemRepository,CartService cartService) {
+            this.cartService = cartService;
             this.orderRepository = orderRepository;
             this.orderItemRepository = orderItemRepository;
         }
@@ -38,18 +42,17 @@ import java.util.concurrent.CompletableFuture;
         // This method checks out a user's cart items and creates an order
         @Async
         public void checkOut(String customer) {
-            //CompletableFuture<CartDto> cartDto = cartService.listCartItems(customer);
+            CompletableFuture<CartDto> cartDto = cartService.listCartItems(customer);
 
-            //List<CartItemDto> cartItemDtoList = cartDto.join().getCartItems();
+            List<CartItemDto> cartItemDtoList = cartDto.join().getCartItems();
 
             Order order = new Order();
             order.setCreatedAt(new Date());
-            //order.setUpdatedAt(new Date());
             order.setCustomer(customer);
-            //order.setTotalAmount(cartDto.join().getTotal());
+            order.setTotalAmount(cartDto.join().getTotal());
             orderRepository.save(order);
 
-            // for (CartItemDto cartItemDto : cartItemDtoList) {
+             for (CartItemDto cartItemDto : cartItemDtoList) {
             OrderItem orderItem = new OrderItem();
             orderItem.setCreatedDate(new Date());
             Product product = new Product();
@@ -57,8 +60,8 @@ import java.util.concurrent.CompletableFuture;
             orderItem.setQuantity(orderItem.getQuantity());
             orderItem.setOrder(order);
             orderItemRepository.save(orderItem);
-            // }
-            //cartService.deleteUserCartItems(customer);
+             }
+            cartService.deleteUserCartItems(customer);
         }
 
         // This method returns a list of orders for a particular user
@@ -74,4 +77,5 @@ import java.util.concurrent.CompletableFuture;
             return CompletableFuture.completedFuture(order.join());
         }
     }
+
 

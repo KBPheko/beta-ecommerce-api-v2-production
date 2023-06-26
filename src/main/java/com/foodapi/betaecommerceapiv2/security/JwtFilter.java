@@ -20,7 +20,7 @@ import java.io.IOException;
 
 
 //@Component
-@Configuration
+@Component
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;

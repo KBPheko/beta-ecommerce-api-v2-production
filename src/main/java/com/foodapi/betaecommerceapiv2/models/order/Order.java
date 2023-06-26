@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Entity
 @Schema(name = "Order", description = "Order model")
-@Table(name = "order")
+@Table(name = "orders") // Renamed the table to "orders"
 public class Order {
 
     @Id
@@ -29,7 +29,7 @@ public class Order {
     private Date updatedAt;
 
     @Column(name = "customer")
-   @Schema(description = "Order customer", example = "johnDoe@gmail.com")
+    @Schema(description = "Order customer", example = "johnDoe@gmail.com")
     private String customer;
 
     @Column(name = "total_amount")
@@ -39,7 +39,7 @@ public class Order {
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 
-    public Order(){
+    public Order() {
         super();
     }
 
@@ -51,6 +51,9 @@ public class Order {
         this.totalAmount = totalAmount;
         this.orderItems = orderItems;
     }
+
+    // Getters and setters...
+
 
     public Long getId() {
         return id;
@@ -100,4 +103,3 @@ public class Order {
         this.orderItems = orderItems;
     }
 }
-
