@@ -13,6 +13,7 @@ import com.foodapi.betaecommerceapiv2.exceptions.product.ProductNotFoundExceptio
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ public class APIResponseHandler {
 
     // Common API Exceptions
     // To Handle Internal Server Exception...
+    @ExceptionHandler({Exception.class})
     public ResponseEntity<ApiError> handleException(Exception ex, HttpServletRequest request){
         log.error("Exception: "+ ex.getLocalizedMessage() + " for " + request.getRequestURI());
         return new ResponseEntity<>(ApiError.builder()
@@ -35,6 +37,7 @@ public class APIResponseHandler {
     }
 
     // To handle bad request exception
+    @ExceptionHandler({BadRequestException.class})
     public ResponseEntity<ApiError> handleBadRequestException(BadRequestException ex, HttpServletRequest request){
         log.error("Exception: "+ ex.getLocalizedMessage() + " for " + request.getRequestURI());
         return new ResponseEntity<>(ApiError.builder()
@@ -47,6 +50,7 @@ public class APIResponseHandler {
     }
 
     // To handle forbidden exception
+    @ExceptionHandler({ForbiddenException.class})
     public ResponseEntity<ApiError> handleForbiddenException(ForbiddenException ex, HttpServletRequest request){
         log.error("Exception: "+ ex.getLocalizedMessage() + " for " + request.getRequestURI());
         return new ResponseEntity<>(ApiError.builder()
@@ -59,6 +63,7 @@ public class APIResponseHandler {
     }
 
     // To handle invalid credentials exception
+    @ExceptionHandler({InvalidCredentialsException.class})
     public ResponseEntity<ApiError> handleInvalidUserCredentialsException(InvalidCredentialsException ex, HttpServletRequest request){
         log.error("Exception: "+ ex.getLocalizedMessage() + " for " + request.getRequestURI());
         return new ResponseEntity<>(ApiError.builder()
@@ -71,6 +76,7 @@ public class APIResponseHandler {
     }
 
     // To handle user already exists exception
+    @ExceptionHandler({UserExistsException.class})
     public ResponseEntity<ApiError> handleUserExistsException(UserExistsException ex, HttpServletRequest request){
         log.error("Exception: "+ ex.getLocalizedMessage() + " for " + request.getRequestURI());
         return new ResponseEntity<>(ApiError.builder()
@@ -83,6 +89,7 @@ public class APIResponseHandler {
     }
 
     // To handle User Not Found exception
+    @ExceptionHandler({UserNotFoundException.class})
     public ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException ex, HttpServletRequest request){
         log.error("Exception: "+ ex.getLocalizedMessage() + " for " + request.getRequestURI());
         return new ResponseEntity<>(ApiError.builder()
@@ -96,6 +103,7 @@ public class APIResponseHandler {
 
     // Product Exceptions
     // To handle invalid filter exception
+    @ExceptionHandler({InvalidFilterException.class})
     public ResponseEntity<ApiError> handleInvalidFilterException(InvalidFilterException ex, HttpServletRequest request){
         log.error("Exception: "+ ex.getLocalizedMessage() + " for " + request.getRequestURI());
         return new ResponseEntity<>(ApiError.builder()
@@ -108,6 +116,7 @@ public class APIResponseHandler {
     }
 
     // To handle Product Already Exists exception
+    @ExceptionHandler({ProductExistsException.class})
     public ResponseEntity<ApiError> handleProductExistsException(ProductExistsException ex, HttpServletRequest request){
         log.error("Exception: "+ ex.getLocalizedMessage() + " for " + request.getRequestURI());
         return new ResponseEntity<>(ApiError.builder()
@@ -120,6 +129,7 @@ public class APIResponseHandler {
     }
 
     // To handle Product Not Found exception
+    @ExceptionHandler({ProductNotFoundException.class})
     public ResponseEntity<ApiError> handleProductNotFoundException(ProductNotFoundException ex, HttpServletRequest request){
         log.error("Exception: "+ ex.getLocalizedMessage() + " for " + request.getRequestURI());
         return new ResponseEntity<>(ApiError.builder()
@@ -133,6 +143,7 @@ public class APIResponseHandler {
 
     //order
     // To handle Order Not Found exception
+    @ExceptionHandler({OrderNotFoundException.class})
     public ResponseEntity<ApiError> handleOrderNotFoundException(OrderNotFoundException ex, HttpServletRequest request){
         log.error("Exception: "+ ex.getLocalizedMessage() + " for " + request.getRequestURI());
         return new ResponseEntity<>(ApiError.builder()
@@ -146,6 +157,7 @@ public class APIResponseHandler {
 
     //Cart Exception
     // To handle Cart Not Found exception
+    @ExceptionHandler({CartNotFoundException.class})
     public ResponseEntity<ApiError> handleCartNotFoundException(CartNotFoundException ex, HttpServletRequest request){
         log.error("Exception: "+ ex.getLocalizedMessage() + " for " + request.getRequestURI());
         return new ResponseEntity<>(ApiError.builder()

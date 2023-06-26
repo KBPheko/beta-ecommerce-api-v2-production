@@ -7,12 +7,16 @@ import com.foodapi.betaecommerceapiv2.models.product.Category;
 import com.foodapi.betaecommerceapiv2.models.product.Product;
 import com.foodapi.betaecommerceapiv2.repository.product.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+//@Transactional
 public class ProductServiceImpl implements ProductService{
 
     private ProductRepository productRepository;
@@ -26,7 +30,11 @@ public class ProductServiceImpl implements ProductService{
     /** Returns a list of products*/
     @Override
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        List<Product> allProducts = productRepository.findAll();
+        if(allProducts.isEmpty()){
+            return allProducts;
+        }
+        return allProducts;
     }
 
     /** Returns one product by product id*/
@@ -37,12 +45,15 @@ public class ProductServiceImpl implements ProductService{
 
     /** adds new product*/
     @Override
+    @Transactional(rollbackOn = ProductExistsException.class) //wont add to db if exception is being thrown
     public Product createProduct(Product product) throws ProductExistsException {
-        Product savedProduct = productRepository.save(product);
-        if (savedProduct != null){
-            throw new ProductExistsException("Product Already Exists!");
+        List<Product> products = getAllProducts();
+        for (Product product1: products) {
+            if (product1.getProductName() == product.getProductName()) {
+                throw new ProductExistsException("Product already exists");
+            }
         }
-        return savedProduct;
+        return productRepository.save(product);
     }
 
     /** updates existing product*/
@@ -66,17 +77,20 @@ public class ProductServiceImpl implements ProductService{
         Date dateUpdated = new Date();
         // Update the dateUpdated field
         existingProduct.setDateUpdated(dateUpdated);
+        Date updatedAt = new Date();
+        category.setDateUpdated(updatedAt);
 
         return productRepository.save(existingProduct);
     }
 
     /** deletes existing product*/
-    @Override
+    //@Transactional(rollbackOn = ProductNotFoundException.class)
     public void deleteProduct(Long productId) throws ProductNotFoundException {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product Not Found"));
-
-        productRepository.deleteById(productId);
+        Product prodItem = productRepository.findById(productId).orElseThrow(() ->
+                new ProductNotFoundException("Not found"));
+        productRepository.delete(prodItem);
     }
+
 
     @Override
     public List<Product> searchProducts(String productName, String categoryName) throws InvalidFilterException {

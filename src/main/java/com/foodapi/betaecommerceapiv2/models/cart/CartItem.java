@@ -1,5 +1,7 @@
 package com.foodapi.betaecommerceapiv2.models.cart;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -66,6 +68,3 @@ public class CartItem {
             this.quantity = quantity;
         }
     }
-
-
-

@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * This class defines the cart model
@@ -34,7 +35,6 @@ public class Cart {
     @Column(name = "customer")
     @Schema(description = "Cart customer", example = "abc123@gmail.com")
     private String customer;
-
 
     @Column(name = "quantity")
     @Schema(description = "Cart quantity", example = "1")
@@ -93,6 +93,7 @@ public class Cart {
     public void setCustomer(String customer) {
         this.customer = customer;
     }
+
 
     public Integer getQuantity() {
         return quantity;

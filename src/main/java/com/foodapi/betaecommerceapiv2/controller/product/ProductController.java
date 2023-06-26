@@ -1,13 +1,11 @@
 package com.foodapi.betaecommerceapiv2.controller.product;
 
-import com.foodapi.betaecommerceapiv2.exceptions.APIResponseHandler;
-import com.foodapi.betaecommerceapiv2.exceptions.ApiError;
 import com.foodapi.betaecommerceapiv2.exceptions.common.BadRequestException;
 import com.foodapi.betaecommerceapiv2.exceptions.product.InvalidFilterException;
 import com.foodapi.betaecommerceapiv2.exceptions.product.ProductExistsException;
 import com.foodapi.betaecommerceapiv2.exceptions.product.ProductNotFoundException;
 import com.foodapi.betaecommerceapiv2.models.product.Product;
-import com.foodapi.betaecommerceapiv2.service.product.ProductService;
+import com.foodapi.betaecommerceapiv2.service.product.ProductServiceImpl;
 import com.foodapi.betaecommerceapiv2.util.ResponseHandler;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +22,11 @@ import java.util.List;
 @RequestMapping(value = "/api/product")
 public class ProductController {
 
-    private ProductService productService;
+    private final ProductServiceImpl productService;
 
     // Inject service
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(ProductServiceImpl productService) {
         this.productService = productService;
     }
 
@@ -39,12 +37,13 @@ public class ProductController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "You are not authorized to view the resource"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Accessing the resource you were trying to reach is forbidden")
     })
-    public ResponseEntity<Object> getAllProducts() throws ProductNotFoundException {
+    public ResponseEntity<Object> getAllProducts() {
         List<Product> listOfProducts = productService.getAllProducts();
-        if (listOfProducts.isEmpty()){
-            throw new ProductNotFoundException("Products Not Found");
+        if (!listOfProducts.isEmpty()){
+            return ResponseHandler.generateResponse("Products Retrieved Successfully!", HttpStatus.OK, listOfProducts);
+        } else {
+            return ResponseHandler.generateResponse("No Products Found", HttpStatus.NO_CONTENT, null);
         }
-        return ResponseHandler.generateResponse("Products Retrieved Successfully!", HttpStatus.OK, listOfProducts);
     }
 
     /** Retrieve product by ID*/
@@ -59,13 +58,19 @@ public class ProductController {
     }
 
     /** Create new product*/
-    @PostMapping("/product")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully created product"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input provided"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Product already exists")
     })
+    @PostMapping("/create")
     public ResponseEntity<Object> createProduct(@Validated @RequestBody Product product) throws ProductExistsException {
+        List<Product> products = productService.getAllProducts();
+        for (Product product1: products){
+            if (product1.getProductName().equals(product.getProductName())){
+                throw new ProductExistsException("Product already exists");
+            }
+        }
         return ResponseHandler.generateResponse("Successfully created product", HttpStatus.CREATED, productService.createProduct(product));
     }
 
@@ -88,20 +93,42 @@ public class ProductController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input provided"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Product Not Found")
     })
-    public ResponseEntity<Object> deleteProduct(@PathVariable Long productId) throws ProductNotFoundException {
-        return ResponseHandler.generateResponse("Successfully deleted product", HttpStatus.OK, null);
+    public ResponseEntity<Object> deleteProduct(@PathVariable Long productId) throws ProductNotFoundException, BadRequestException {
+        try {
+            productService.deleteProduct(productId);
+            return ResponseEntity.ok().body("Successfully deleted");
+        } catch (ProductNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete product");
+        }
     }
 
+
     /** Search and Filter products*/
-    @GetMapping("/search")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Search success"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input provided"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Invalid Search")
     })
+    @GetMapping("/search")
     public ResponseEntity<Object> searchProducts(@RequestParam(required = false) String productName,
                                                  @RequestParam(required = false) String categoryName) throws InvalidFilterException {
-        List<Product> searchResults = productService.searchProducts(productName, categoryName);
-        return ResponseHandler.generateResponse("Search success", HttpStatus.OK, searchResults);
+        try {
+            List<Product> searchResults = productService.searchProducts(productName, categoryName);
+
+            if (searchResults.isEmpty()) {
+
+                return ResponseHandler.generateResponse("Not Found!!!", HttpStatus.NOT_FOUND, null);
+
+            }
+            return ResponseHandler.generateResponse("Search Found!!!", HttpStatus.OK, searchResults);
+
+        } catch (Exception e) {
+            String errorMsg = e.getLocalizedMessage();
+            errorMsg = "INTERNAL SERVER ERROR!!!";
+            return ResponseHandler.generateResponse(errorMsg, HttpStatus.INTERNAL_SERVER_ERROR, null);
+        }
+
     }
 }
