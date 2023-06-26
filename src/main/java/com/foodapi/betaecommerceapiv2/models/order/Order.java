@@ -33,7 +33,7 @@ public class Order {
     private String customer;
 
     @Column(name = "total_amount")
-    @Schema(description = "Order total amount", example = "35.00")
+    @Schema(description = "Order total amount", example = "40.00")
     private Double totalAmount;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
