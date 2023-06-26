@@ -14,7 +14,7 @@ public interface OrderService {
 
     //for checking out
     void checkOut(String customer);
-    //getting a list of the order for a product
+    //getting a list of the order for a  specific product
     CompletableFuture<List<Order>> getAllOrders(String customer);
     // throw an exception if the order is not found
     CompletableFuture<Order> getOrder(Long id) throws OrderNotFoundException;
