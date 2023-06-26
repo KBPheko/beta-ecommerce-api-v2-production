@@ -78,7 +78,7 @@ public class CustomerController {
     })
     @Parameters(value = {
             @Parameter(name = "Authorization", in = ParameterIn.HEADER, description = "Bearer <token>", required = true),
-            @Parameter(name = "email", in = ParameterIn.PATH, description = "Email of the customer to be retrieved", required = true)
+            @Parameter(name = "email", in = ParameterIn.PATH, description = "Email of the customer §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§to be retrieved", required = true)
     })
     @GetMapping("/customer/{email}")
     @PreAuthorize("hasAuthority('ROLE_USER')")

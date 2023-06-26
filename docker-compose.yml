@@ -9,7 +9,8 @@ services:
     ports:
       - "8080:8080"
     env_file:
-      - .env
+      - app.env
+      - database.env
     depends_on:
       - food_db
     restart: no
@@ -22,6 +23,7 @@ services:
     ports:
       - "5432:5432"
     env_file:
+      - app.env
       - database.env
     volumes:
       - ./database-data:/var/lib/postgresql/data

@@ -43,7 +43,7 @@ public class Customer {
     @Schema(description = "This is the customer's contact number.", example = "12345678")
     private String contactNumber;
 
-    @Column(name = "role", nullable = true, length = 20)
+    @Column(name = "role", nullable = false, length = 20)
     @Schema(description = "This is the customer's role.", example = "ROLE_USER")
     private String role;
 

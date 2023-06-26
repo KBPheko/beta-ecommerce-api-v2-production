@@ -19,7 +19,7 @@ public class Address {
     @Schema(description = "This is the address's id.", example = "1")
     private Long id;
 
-    @Column(name = "building", nullable = true, length = 50)
+    @Column(name = "building", nullable = false, length = 50)
     @NotBlank(message = "Building is required.")
     @Schema(description = "This is the address's building.", example = "House")
     private String building;

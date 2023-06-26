@@ -14,9 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * This class provides methods for loading and generating the jwt payload
- */
+
 @Service
 public class JwtService implements UserDetailsService {
 
