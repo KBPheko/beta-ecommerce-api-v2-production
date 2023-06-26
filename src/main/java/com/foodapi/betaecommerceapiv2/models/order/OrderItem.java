@@ -3,16 +3,20 @@ package com.foodapi.betaecommerceapiv2.models.order;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.foodapi.betaecommerceapiv2.models.product.Product;
 import com.sun.istack.NotNull;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name ="order_item")
+@Schema(name = "OrderItem", description = "OrderItem model")
 public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "OrderItemId", example = "4")
+
     private Long id;
 
     @OneToOne
@@ -20,9 +24,11 @@ public class OrderItem {
     private Product product;
 
     @Column(name = "quantity")
+    @Schema(description = "Order item quantity", example = "1") //code for swagger
     private int quantity;
 
     @Column(name = "price")
+    @Schema(description = "Order item price", example = "100.00")
     private double price;
 
     @ManyToOne
@@ -31,6 +37,8 @@ public class OrderItem {
     private Order order;
 
     @Column(name = "created_date")
+    @Schema(description = "OrderItem createdDate", example = "2021-09-01 00:00:00")
+
     private Date createdDate;
 
 

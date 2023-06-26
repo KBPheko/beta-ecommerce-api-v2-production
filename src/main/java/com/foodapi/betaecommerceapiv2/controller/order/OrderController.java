@@ -4,6 +4,8 @@ import com.foodapi.betaecommerceapiv2.exceptions.order.OrderNotFoundException;
 import com.foodapi.betaecommerceapiv2.models.order.Order;
 import com.foodapi.betaecommerceapiv2.service.order.OrderService;
 import com.foodapi.betaecommerceapiv2.util.ResponseHandler;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +20,25 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 @RequestMapping(value = "/api/orders")
 public class OrderController {
- //reponsible for the Restful APi
+ //responsible for the Restful APi
+
 
     private final OrderService orderService;
     @Autowired
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
+
+    // End points responsible for a placing an order and the swagger documentation
+    @Operation(summary = "Place an order", description = "This endpoint is used to place an order")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "The Order is placed successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Not found")
+    })
+
+
     // get all orders
     @GetMapping
     public ResponseEntity<Object> listAllOrders() {
