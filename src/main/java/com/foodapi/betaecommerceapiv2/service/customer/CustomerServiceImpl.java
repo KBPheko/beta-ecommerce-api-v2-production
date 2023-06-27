@@ -48,7 +48,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (customerExists != null) {
             throw new UserExistsException("User with email " + customer.getEmail() + " already exists");
         }
-        customer.setRole("USER");
+        customer.setRole("ADMIN");
         customerRepository.save(customer);
     }
 

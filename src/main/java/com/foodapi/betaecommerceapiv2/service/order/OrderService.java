@@ -1,3 +1,4 @@
+
 package com.foodapi.betaecommerceapiv2.service.order;
 
 import com.foodapi.betaecommerceapiv2.exceptions.order.OrderNotFoundException;
@@ -9,7 +10,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface OrderService {
     // this file is the declaration of the methods and also provides the CRUD operations
-    //calling a fucntion to save an iteam in a particular order froor the order item
+    //calling a function to save an item in a particular order for the order item
 
     //for checking out
     void checkOut(String customer);
@@ -19,10 +20,6 @@ public interface OrderService {
     CompletableFuture<Order> getOrder(Long id) throws OrderNotFoundException;
 
 
-    //code
-    
-
 
 }
-
 

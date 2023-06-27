@@ -99,6 +99,14 @@ public class CustomerController {
         customerService.createCustomer(customer);
         return ResponseHandler.generateResponse("Successfully registered customer", HttpStatus.CREATED, null);
     }
+//
+//    @PostMapping("/admin")
+//    public ResponseEntity<Object> registerAdmin(@Validated @RequestBody Customer customer) throws UserExistsException {
+//        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
+//        customerService.createCustomer(customer);
+//        return ResponseHandler.generateResponse("Successfully registered admin", HttpStatus.CREATED, null);
+    //}
+
 
     // This method is used to authenticate an in-coming customer
     @Operation(summary = "Authenticate a customer", description = "This endpoint is used to authenticate a customer")
@@ -155,4 +163,6 @@ public class CustomerController {
         customerService.deleteCustomer(email);
         return ResponseHandler.generateResponse("Successfully deleted customer", HttpStatus.OK, null);
     }
+
+
 }
