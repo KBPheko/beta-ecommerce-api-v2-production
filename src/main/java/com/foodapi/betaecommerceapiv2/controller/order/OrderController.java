@@ -6,6 +6,7 @@ import com.foodapi.betaecommerceapiv2.service.order.OrderService;
 import com.foodapi.betaecommerceapiv2.util.ResponseHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,12 +61,21 @@ public class OrderController {
     }
 
     //add an order
+    @Operation(summary = "Place an order", description = "API endpoint used to place an order", security = @SecurityRequirement(name =
+    "bearerAuth"))
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Ordered successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Not found")
+    })
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping(value ="/order")
     public ResponseEntity<Object> placeOrder() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = authentication.getName();
         orderService.checkOut(user);
-        return ResponseHandler.generateResponse("Order placed successfully", HttpStatus.CREATED, null);
+        return ResponseHandler.generateResponse("Ordered successfully", HttpStatus.CREATED, null);
     }
 
 
