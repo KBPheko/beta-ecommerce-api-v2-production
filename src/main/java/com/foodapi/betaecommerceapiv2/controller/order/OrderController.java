@@ -6,6 +6,7 @@ import com.foodapi.betaecommerceapiv2.service.order.OrderService;
 import com.foodapi.betaecommerceapiv2.util.ResponseHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+@Tag(name = "Order", description = "These endpoints demonstrate the ability view all orders, retrieve order by ID, and place orders")
 @RestController
 @RequestMapping(value = "/api/v2/orders")
 public class OrderController {
