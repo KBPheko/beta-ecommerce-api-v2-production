@@ -44,6 +44,7 @@ public class Product {
 
     //Default
     public Product() {
+        super();
     }
 
     // Parameterized constructor

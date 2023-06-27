@@ -27,7 +27,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
                 List<Predicate> predicates = new ArrayList<>();
 
                 if (productName != null) {
-                    predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + productName.toLowerCase() + "%" + productName.toUpperCase() + "%"));
+                    predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("productName")), "%" + productName.toLowerCase() + "%" + productName.toUpperCase() + "%"));
                 }
                 if (categoryName != null) {
                     Join<Product, Category> prodCategoryJoin = root.join("category");
@@ -38,5 +38,4 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             }
         }));
     }
-
 }
