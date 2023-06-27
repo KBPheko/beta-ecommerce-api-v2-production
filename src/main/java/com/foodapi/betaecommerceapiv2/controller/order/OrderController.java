@@ -30,9 +30,10 @@ public class OrderController {
     }
 
     // End points responsible for a placing an order and the swagger documentation
-    @Operation(summary = "Place an order", description = "This endpoint is used to place an order")
+    //swagger documentation the first method of the endpoint should be be specified in the first description
+    @Operation(summary = "Get an order", description = "This endpoint is used to get an oder")
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "The Order is placed successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "The Order has been placed successfully"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Not found")
