@@ -32,17 +32,16 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    // End points responsible for a placing an order and the swagger documentation
-    @Operation(summary = "Place an order", description = "This endpoint is used to place an order")
+    // get all orders
+    @Operation(summary = "List of orders", description = "This endpoint is used to view a list of orders", security = @SecurityRequirement(name =
+            "bearerAuth"))
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "The Order is placed successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Retrieved orders successfully"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Not found")
     })
-
-
-    // get all orders
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @GetMapping(value = "/orders")
     public ResponseEntity<Object> listAllOrders() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -54,6 +53,15 @@ public class OrderController {
         return ResponseHandler.generateResponse("Orders retrieved successfully", HttpStatus.OK, orders.join());
     }
 //get one product by id
+@Operation(summary = "Get order by ID", description = "API endpoint used to get order by ID", security = @SecurityRequirement(name =
+        "bearerAuth"))
+@ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "GET order successfully"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Not found")
+})
+@PreAuthorize("hasAuthority('ROLE_USER')")
     @GetMapping("/{id}")
     public ResponseEntity<Object> getOrder(@PathVariable Long id) throws OrderNotFoundException {
         CompletableFuture<Order> order = orderService.getOrder(id);
