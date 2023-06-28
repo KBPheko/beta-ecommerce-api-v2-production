@@ -54,13 +54,15 @@ import java.util.concurrent.CompletableFuture;
             orderRepository.save(order);
 
             for (CartItemDto cartItemDto : cartItemDtoList) {
-            OrderItem orderItem = new OrderItem();
-            orderItem.setCreatedDate(new Date());
-            orderItem.setPrice(cartItemDto.getProduct().getPrice());
-            orderItem.setQuantity(orderItem.getQuantity());
-            orderItem.setOrder(order);
-            orderItemRepository.save(orderItem);
-             }
+                OrderItem orderItem = new OrderItem();
+                orderItem.setId(cartItemDto.getId());
+                orderItem.setCreatedDate(new Date());
+                orderItem.setPrice(cartItemDto.getProduct().getPrice());
+                orderItem.setQuantity(cartItemDto.getQuantity()); // Fix: Set the quantity from the cart item
+                orderItem.setOrder(order);
+                orderItemRepository.save(orderItem);
+            }
+
             cartService.deleteUserCartItems(customer);
         }
 
