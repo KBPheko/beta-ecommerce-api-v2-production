@@ -5,6 +5,8 @@ import com.foodapi.betaecommerceapiv2.models.product.Product;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.*;
@@ -18,6 +20,11 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
      * Search / Filter functionality which checks data from database and filters according to product name
      *  and category name
      */
+
+    @Query("SELECT p FROM Product p WHERE " +
+            "(:productName IS NULL OR p.productName LIKE %:productName%) " +
+            "AND (:categoryName IS NULL OR p.categoryName = :categoryName)")
+    List<Product> searchProducts(@Param("productName") String productName, @Param("categoryName") String categoryName);
 
     default List<Product> searchProduct(String productName, String categoryName){
 
