@@ -48,6 +48,7 @@ import java.util.concurrent.CompletableFuture;
 
             Order order = new Order();
             order.setCreatedAt(new Date());
+            order.setUpdatedAt(new Date());
             order.setCustomer(customer);
             order.setTotalAmount(cartDto.join().getTotal());
             orderRepository.save(order);
