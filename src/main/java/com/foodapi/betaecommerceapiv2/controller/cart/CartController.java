@@ -61,9 +61,6 @@ public class CartController {
         return ResponseHandler.generateResponse("Cart item deleted successfully", HttpStatus.OK, null);
     }
 
-
-
-
     // This is an endpoint for listing all the cart items
     @Operation(summary = "List all cart items", description = "This endpoint is used to list all the cart items", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
@@ -79,7 +76,6 @@ public class CartController {
         return cartService.listCartItems(user).thenApply(cartDto -> ResponseHandler.generateResponse("Cart items retrieved successfully", HttpStatus.OK, cartDto));
     }
 
-
     // This is an endpoint for updating a cart item
     @Operation(summary = "Update a cart item", description = "This endpoint is used to update a cart item", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
@@ -92,8 +88,8 @@ public class CartController {
     public ResponseEntity<Object> updateCartItem(@PathVariable Long id, @RequestBody AddToCartDto cartDto) throws CartNotFoundException, ProductNotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = authentication.getName();
-        //CompletableFuture<Product> product = productService.getProductById(cartDto.getProductId());
-        //cartService.updateCartItem(cartDto, product.join(), user);
+        Product product = productService.getProductById(cartDto.getProductId());
+        cartService.updateCartItem(cartDto, product, user);
         return ResponseHandler.generateResponse("Cart item updated successfully", HttpStatus.OK, null);
     }
 
@@ -104,16 +100,14 @@ public class CartController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Product not found"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Internal server error")
     })
-
-
-    @PostMapping
+    @PostMapping()
     @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<Object> addToCart(@RequestBody AddToCartDto addToCartDto) throws ProductNotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = authentication.getName();
-        // CompletableFuture<Product> product = productService.getProductById(addToCartDto.getProductId());
-        //cartService.addToCart(addToCartDto, product.join(), user);
-        return ResponseHandler.generateResponse("Product added to cart successfully", HttpStatus.OK, null);
+         Product product = productService.getProductById(addToCartDto.getProductId());
+        cartService.addToCart(addToCartDto, product, user);
+        return ResponseHandler.generateResponse("Product added to cart successfully", HttpStatus.OK, addToCartDto);
     }
 
 
