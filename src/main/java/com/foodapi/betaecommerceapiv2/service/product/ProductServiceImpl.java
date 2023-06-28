@@ -92,12 +92,12 @@ public class ProductServiceImpl implements ProductService{
     }
 
 
-
     @Override
     public List<Product> searchProducts(String productName, String categoryName) throws InvalidFilterException {
-        if (productName == null && categoryName == null){
-            throw new InvalidFilterException("At least one filer parameter must be provided.");
+        if (productName == null && categoryName == null) {
+            throw new InvalidFilterException("At least one filter parameter must be provided.");
         }
         return productRepository.searchProduct(productName, categoryName);
     }
+
 }
