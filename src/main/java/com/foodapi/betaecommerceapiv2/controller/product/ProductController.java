@@ -136,6 +136,7 @@ public class ProductController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input provided"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Invalid Search")
     })
+
     @GetMapping("/search")
     public ResponseEntity<Object> searchProducts(@RequestParam(required = false) String productName,
                                                  @RequestParam(required = false) String categoryName) throws InvalidFilterException {
@@ -149,13 +150,16 @@ public class ProductController {
                 return ResponseHandler.generateResponse("Not Found!!!", HttpStatus.NOT_FOUND, null);
             } else {
                 logger.info("Search results size: {}", searchResults.size());
-                return ResponseHandler.generateResponse("Search Results", HttpStatus.FOUND, searchResults);
+                return ResponseHandler.generateResponse("Search Results", HttpStatus.OK, searchResults);
             }
         } catch (Exception e) {
-            String errorMsg = e.getLocalizedMessage();
-            errorMsg = "INTERNAL SERVER ERROR!!!";
+            String errorMsg = "INTERNAL SERVER ERROR!!!";
             logger.error("Error occurred during search", e);
             return ResponseHandler.generateResponse(errorMsg, HttpStatus.INTERNAL_SERVER_ERROR, null);
         }
     }
+
+
+
+
 }
