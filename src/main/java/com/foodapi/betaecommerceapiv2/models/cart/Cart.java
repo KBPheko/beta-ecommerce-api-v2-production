@@ -94,7 +94,6 @@ public class Cart {
         this.customer = customer;
     }
 
-
     public Integer getQuantity() {
         return quantity;
     }

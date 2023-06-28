@@ -16,7 +16,6 @@ public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "OrderItemId", example = "4")
-
     private Long id;
 
     @OneToOne
