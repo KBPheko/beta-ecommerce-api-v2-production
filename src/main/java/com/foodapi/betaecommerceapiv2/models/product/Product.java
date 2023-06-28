@@ -42,6 +42,11 @@ public class Product {
     @Column(name = "imageUrl", nullable = false, length = 255)
     private String imageUrl;
 
+    @Column(name = "deleted")
+    private boolean deleted;
+
+
+
     //Default
     public Product() {
         super();
@@ -122,7 +127,17 @@ public class Product {
         return imageUrl;
     }
 
+
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
 }

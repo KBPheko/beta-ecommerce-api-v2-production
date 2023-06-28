@@ -109,24 +109,24 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete/{productId}")
-    @Operation(summary = "Delete existing product", description = "Endpoint to demonstrate deleting",security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "Delete existing product", description = "Endpoint to demonstrate deleting", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully deleted product"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input provided"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Product Not Found")
     })
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    public ResponseEntity<Object> deleteProduct(@PathVariable Long productId) throws ProductNotFoundException, BadRequestException {
+    public ResponseEntity<Object> softDeleteProduct(@PathVariable Long productId) {
         try {
-            productService.deleteProduct(productId);
-            return ResponseHandler.generateResponse("Successfully deleted product", HttpStatus.OK, null);
+            productService.softDeleteProduct(productId);
+            return ResponseHandler.generateResponse("Successfully soft deleted product", HttpStatus.OK, null);
         } catch (ProductNotFoundException e) {
-            //return ResponseHandler.generateResponse("Product Not Found", HttpStatus.NOT_FOUND, e.getLocalizedMessage());
-            throw new ProductNotFoundException("Product Not Found");
+            return ResponseHandler.generateResponse("Product Not Found", HttpStatus.NOT_FOUND, null);
         } catch (Exception e) {
-            throw new BadRequestException("Internal Server Error");
+            return ResponseHandler.generateResponse("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR, null);
         }
     }
+
 
 
     /** Search and Filter products*/
