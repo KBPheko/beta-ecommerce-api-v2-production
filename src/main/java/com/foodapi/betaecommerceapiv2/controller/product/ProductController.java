@@ -1,5 +1,7 @@
 package com.foodapi.betaecommerceapiv2.controller.product;
 
+import com.foodapi.betaecommerceapiv2.exceptions.ApiError;
+import com.foodapi.betaecommerceapiv2.exceptions.ProductAPIError;
 import com.foodapi.betaecommerceapiv2.exceptions.common.BadRequestException;
 import com.foodapi.betaecommerceapiv2.exceptions.product.InvalidFilterException;
 import com.foodapi.betaecommerceapiv2.exceptions.product.ProductExistsException;
@@ -8,8 +10,11 @@ import com.foodapi.betaecommerceapiv2.models.product.Product;
 import com.foodapi.betaecommerceapiv2.service.product.ProductServiceImpl;
 import com.foodapi.betaecommerceapiv2.util.ResponseHandler;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Product", description = "API endpoints to view, add, update, delete, and search products")
 @RestController
 @Slf4j
 @RequestMapping(value = "/api/product")
@@ -39,6 +45,7 @@ public class ProductController {
 
     /** To retrieve all products*/
     @GetMapping("/products")
+    @Operation(summary = "View all products", description = "This endpoint is used to view all products")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Products Retrieved Successfully!"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "You are not authorized to view the resource"),
@@ -55,6 +62,7 @@ public class ProductController {
 
     /** Retrieve product by ID*/
     @GetMapping("/{productId}")
+    @Operation(summary = "View product by ID", description = "This endpoint is use to retrieved products by their product ID")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Retrieved Product Successfully"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid productId provided"),
@@ -66,11 +74,14 @@ public class ProductController {
 
     /** Create new product*/
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully created product"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input provided"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Product already exists")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Successfully created product",
+                    content = @Content(
+                            schema = @Schema(implementation = ResponseHandler.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Product already exists",
+                    content = @Content(
+                            schema = @Schema(implementation = ProductAPIError.class)))
     })
-    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "Create a new product", description = "This endpoint demonstrate creating a new product", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping("/create")
     public ResponseEntity<Object> createProduct(@Validated @RequestBody Product product) throws ProductExistsException {
@@ -90,7 +101,7 @@ public class ProductController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input provided"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Product not found")
     })
-    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "Update existing product", description = "Endpoint to demonstrate admin updating an existing product",security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<Object> updateProduct(@PathVariable Long productId, @Validated @RequestBody Product product) throws ProductNotFoundException{
         Product updatedProd = productService.updateExistingProduct(productId, product);
@@ -98,7 +109,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete/{productId}")
-    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "Delete existing product", description = "Endpoint to demonstrate deleting",security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully deleted product"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input provided"),
@@ -119,6 +130,7 @@ public class ProductController {
 
 
     /** Search and Filter products*/
+    @Operation(summary = "Search and Filter", description = "This endpoint is used to search and filter products")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Search success"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input provided"),
