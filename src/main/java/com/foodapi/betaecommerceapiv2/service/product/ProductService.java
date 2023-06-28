@@ -17,7 +17,7 @@ public interface ProductService {
 
     Product updateExistingProduct(Long productId, Product product) throws ProductNotFoundException;
 
-    void deleteProduct(Long productId) throws ProductNotFoundException;
+    void softDeleteProduct(Long productId) throws ProductNotFoundException;
 
     List<Product> searchProducts(String productName, String categoryName) throws InvalidFilterException;
 
