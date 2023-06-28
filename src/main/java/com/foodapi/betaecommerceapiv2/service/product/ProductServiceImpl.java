@@ -30,11 +30,8 @@ public class ProductServiceImpl implements ProductService{
     /** Returns a list of products*/
     @Override
     public List<Product> getAllProducts() {
-        List<Product> allProducts = productRepository.findAll();
-        if(allProducts.isEmpty()){
-            return allProducts;
-        }
-        return allProducts;
+        return productRepository.findByDeletedFalse();
+
     }
 
     /** Returns one product by product id*/

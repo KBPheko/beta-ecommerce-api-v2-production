@@ -23,6 +23,10 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Modifying
     @Query("UPDATE Product p SET p.deleted = true WHERE p.productId = :productId")
     void softDeleteProduct(Long productId);
+
+
+    List<Product> findByDeletedFalse();
+
     /**
      * Search / Filter functionality which checks data from database and filters according to product name
      *  and category name
