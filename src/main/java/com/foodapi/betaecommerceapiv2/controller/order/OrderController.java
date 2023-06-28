@@ -23,27 +23,24 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 @RequestMapping(value = "/api/v2/orders")
 public class OrderController {
- //responsible for the Restful APi
-
+    //responsible for the Restful APi
 
     private final OrderService orderService;
+
     @Autowired
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
-    // End points responsible for a placing an order and the swagger documentation
-    //swagger documentation the first method of the endpoint should be be specified in the first description
-    @Operation(summary = "Get an order", description = "This endpoint is used to get an oder")
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "The Order has been placed successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "GET order successfully"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Not found")
     })
-
-
-    // get all orders
+    @Operation(summary = "List of orders", description = "This endpoint is used to view a list of orders", security = @SecurityRequirement(name =
+            "bearerAuth"))
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @GetMapping(value = "/orders")
     public ResponseEntity<Object> listAllOrders() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -54,7 +51,17 @@ public class OrderController {
         }
         return ResponseHandler.generateResponse("Orders retrieved successfully", HttpStatus.OK, orders.join());
     }
-//get one product by id
+
+    //get one product by id
+    @Operation(summary = "Get order by ID", description = "API endpoint used to get order by ID", security = @SecurityRequirement(name =
+            "bearerAuth"))
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "GET order successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Not found")
+    })
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @GetMapping("/{id}")
     public ResponseEntity<Object> getOrder(@PathVariable Long id) throws OrderNotFoundException {
         CompletableFuture<Order> order = orderService.getOrder(id);
@@ -63,7 +70,7 @@ public class OrderController {
 
     //add an order
     @Operation(summary = "Place an order", description = "API endpoint used to place an order", security = @SecurityRequirement(name =
-    "bearerAuth"))
+            "bearerAuth"))
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Ordered successfully"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request"),
@@ -71,7 +78,7 @@ public class OrderController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Not found")
     })
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    @PostMapping(value ="/order")
+    @PostMapping(value = "/order")
     public ResponseEntity<Object> placeOrder() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = authentication.getName();
@@ -79,6 +86,8 @@ public class OrderController {
         return ResponseHandler.generateResponse("Ordered successfully", HttpStatus.CREATED, null);
     }
 
-
-
 }
+
+
+
+
