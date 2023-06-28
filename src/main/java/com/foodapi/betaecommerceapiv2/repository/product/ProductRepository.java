@@ -5,6 +5,7 @@ import com.foodapi.betaecommerceapiv2.models.product.Product;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -16,11 +17,16 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
+
+    /**Delete Product from the database
+     * **/
+    @Modifying
+    @Query("UPDATE Product p SET p.deleted = true WHERE p.productId = :productId")
+    void softDeleteProduct(Long productId);
     /**
      * Search / Filter functionality which checks data from database and filters according to product name
      *  and category name
      */
-
     default List<Product> searchProduct(String productName, String categoryName) {
         return findAll((new Specification<Product>() {
             @Override

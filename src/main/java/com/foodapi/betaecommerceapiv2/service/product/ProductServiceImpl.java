@@ -85,11 +85,15 @@ public class ProductServiceImpl implements ProductService{
 
     /** deletes existing product*/
     @Transactional(rollbackOn = ProductNotFoundException.class)
-    public void deleteProduct(Long productId) throws ProductNotFoundException {
-        Product prodItem = productRepository.findById(productId).orElseThrow(() ->
-                new ProductNotFoundException("Product not found"));
-        productRepository.delete(prodItem);
+    @Override
+    public void softDeleteProduct(Long productId) throws ProductNotFoundException {
+        try {
+            productRepository.softDeleteProduct(productId);
+        } catch (Exception ex) {
+            throw new ProductNotFoundException("Product not found");
+        }
     }
+
 
 
     @Override
