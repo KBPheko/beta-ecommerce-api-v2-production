@@ -85,7 +85,4 @@ public class OrderController {
         orderService.checkOut(user);
         return ResponseHandler.generateResponse("Ordered successfully", HttpStatus.CREATED, null);
     }
-
-
-
 }

@@ -1,5 +1,6 @@
 package com.foodapi.betaecommerceapiv2.models.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -42,6 +43,7 @@ public class Product {
     @Column(name = "imageUrl", nullable = false, length = 255)
     private String imageUrl;
 
+    @JsonIgnore
     @Column(name = "deleted")
     private boolean deleted;
 
