@@ -21,28 +21,24 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
      *  and category name
      */
 
-    @Query("SELECT p FROM Product p WHERE " +
-            "(:productName IS NULL OR p.productName LIKE %:productName%) " +
-            "AND (:categoryName IS NULL OR p.categoryName = :categoryName)")
-    List<Product> searchProducts(@Param("productName") String productName, @Param("categoryName") String categoryName);
-
-    default List<Product> searchProduct(String productName, String categoryName){
-
+    default List<Product> searchProduct(String productName, String categoryName) {
         return findAll((new Specification<Product>() {
             @Override
             public Predicate toPredicate(Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
 
                 if (productName != null) {
-                    predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("productName")), "%" + productName.toLowerCase() + "%" + productName.toUpperCase() + "%"));
+                    predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("productName")), "%" + productName.toLowerCase() + "%"));
                 }
                 if (categoryName != null) {
                     Join<Product, Category> prodCategoryJoin = root.join("category");
-                    predicates.add(criteriaBuilder.like(criteriaBuilder.lower(prodCategoryJoin.get("categoryName")), "%" + categoryName.toLowerCase() + "%" + categoryName.toUpperCase() + "%" ));
+                    predicates.add(criteriaBuilder.like(criteriaBuilder.lower(prodCategoryJoin.get("categoryName")), "%" + categoryName.toLowerCase() + "%"));
                 }
 
-                return criteriaBuilder.and(predicates.toArray( new Predicate[predicates.size()]));
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         }));
     }
+
+
 }

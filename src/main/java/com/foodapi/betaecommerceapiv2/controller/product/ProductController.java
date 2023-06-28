@@ -138,9 +138,8 @@ public class ProductController {
     })
 
     @GetMapping("/search")
-    public ResponseEntity<Object> searchProducts(
-            @RequestParam(required = false) String productName,
-            @RequestParam(required = false) String categoryName) {
+    public ResponseEntity<Object> searchProducts(@RequestParam(required = false) String productName,
+                                                 @RequestParam(required = false) String categoryName) throws InvalidFilterException {
         try {
             logger.info("Received search request with productName: {} and categoryName: {}", productName, categoryName);
 
@@ -153,14 +152,14 @@ public class ProductController {
                 logger.info("Search results size: {}", searchResults.size());
                 return ResponseHandler.generateResponse("Search Results", HttpStatus.OK, searchResults);
             }
-        } catch (InvalidFilterException e) {
-            logger.error("Invalid filter parameters provided", e);
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST, null);
         } catch (Exception e) {
             String errorMsg = "INTERNAL SERVER ERROR!!!";
             logger.error("Error occurred during search", e);
             return ResponseHandler.generateResponse(errorMsg, HttpStatus.INTERNAL_SERVER_ERROR, null);
         }
     }
+
+
+
 
 }

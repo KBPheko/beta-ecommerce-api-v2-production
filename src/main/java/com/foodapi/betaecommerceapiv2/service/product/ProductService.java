@@ -20,4 +20,6 @@ public interface ProductService {
     void deleteProduct(Long productId) throws ProductNotFoundException;
 
     List<Product> searchProducts(String productName, String categoryName) throws InvalidFilterException;
+
+
 }
