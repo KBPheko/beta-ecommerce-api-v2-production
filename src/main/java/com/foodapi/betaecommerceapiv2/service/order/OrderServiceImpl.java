@@ -50,6 +50,7 @@ import java.util.concurrent.CompletableFuture;
             order.setCreatedAt(new Date());
             order.setCustomer(customer);
             order.setTotalAmount(cartDto.join().getTotal());
+
             orderRepository.save(order);
 
              for (CartItemDto cartItemDto : cartItemDtoList) {
