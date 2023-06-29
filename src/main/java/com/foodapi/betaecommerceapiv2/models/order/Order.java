@@ -34,7 +34,7 @@ public class Order {
 
     @Column(name = "total_amount")
     @Schema(description = "Order total amount", example = "40.00")
-    private Double totalAmount;
+    private Double total;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
@@ -43,12 +43,12 @@ public class Order {
         super();
     }
 
-    public Order(Long id, Date createdAt, Date updatedAt, String customer, Double totalAmount, List<OrderItem> orderItems) {
+    public Order(Long id, Date createdAt, Date updatedAt, String customer, Double total, List<OrderItem> orderItems) {
         this.id = id;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.customer = customer;
-        this.totalAmount = totalAmount;
+        this.total = total;
         this.orderItems = orderItems;
     }
 
@@ -87,12 +87,12 @@ public class Order {
         this.customer = customer;
     }
 
-    public Double getTotalAmount() {
-        return totalAmount;
+    public Double getTotal() {
+        return total;
     }
 
-    public void setTotalAmount(Double totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setTotal(Double total) {
+        this.total= total;
     }
 
     public List<OrderItem> getOrderItems() {

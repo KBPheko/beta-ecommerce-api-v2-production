@@ -16,6 +16,7 @@ import com.foodapi.betaecommerceapiv2.repository.order.OrderRepository;
 import org.springframework.scheduling.annotation.Async;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -32,36 +33,70 @@ import java.util.concurrent.CompletableFuture;
 
         private final OrderItemsRepository orderItemRepository;
 
-        @Autowired
-        public OrderServiceImpl(OrderRepository orderRepository, OrderItemsRepository orderItemRepository,CartService cartService) {
-            this.cartService = cartService;
-            this.orderRepository = orderRepository;
-            this.orderItemRepository = orderItemRepository;
-        }
+//        @Autowired
+//        public OrderServiceImpl(OrderRepository orderRepository, OrderItemsRepository orderItemRepository,CartService cartService) {
+//            this.cartService = cartService;
+//            this.orderRepository = orderRepository;
+//            this.orderItemRepository = orderItemRepository;
+//        }
+//
+//        // This method checks out a user's cart items and creates an order
+//        @Async
+//        public void checkOut(String customer) {
+//            CompletableFuture<CartDto> cartDto = cartService.listCartItems(customer);
+//
+//            List<CartItemDto> cartItemDtoList = cartDto.join().getCartItems();
+//
+//            Order order = new Order();
+//            order.setCreatedAt(new Date());
+//            order.setUpdatedAt(new Date());
+//            order.setCustomer(customer);
+//            order.setTotal(cartDto.join().getTotal());
+//            orderRepository.save(order);
+//
+//            for (CartItemDto cartItemDto : cartItemDtoList) {
+//                OrderItem orderItem = new OrderItem();
+//                orderItem.setId(cartItemDto.getId());
+//                orderItem.setCreatedDate(new Date());
+//                orderItem.setPrice(cartItemDto.getProduct().getPrice());
+//                orderItem.setQuantity(cartItemDto.getQuantity()); // Fix: Set the quantity from the cart item
+//                orderItem.setOrder(order);
+//                orderItemRepository.save(orderItem);
+//            }
+//
+//            cartService.deleteUserCartItems(customer);
+//        }
+@Autowired
+public OrderServiceImpl(OrderRepository orderRepository, OrderItemsRepository orderItemRepository, CartService cartService) {
+    this.cartService = cartService;
+    this.orderRepository = orderRepository;
+    this.orderItemRepository = orderItemRepository;
+}
 
-        // This method checks out a user's cart items and creates an order
         @Async
         public void checkOut(String customer) {
             CompletableFuture<CartDto> cartDto = cartService.listCartItems(customer);
-
             List<CartItemDto> cartItemDtoList = cartDto.join().getCartItems();
 
             Order order = new Order();
             order.setCreatedAt(new Date());
             order.setUpdatedAt(new Date());
             order.setCustomer(customer);
-            order.setTotalAmount(cartDto.join().getTotal());
+            order.setTotal(cartDto.join().getTotal());
             orderRepository.save(order);
+
+            List<OrderItem> orderItems = new ArrayList<>();
 
             for (CartItemDto cartItemDto : cartItemDtoList) {
                 OrderItem orderItem = new OrderItem();
-                orderItem.setId(cartItemDto.getId());
                 orderItem.setCreatedDate(new Date());
                 orderItem.setPrice(cartItemDto.getProduct().getPrice());
-                orderItem.setQuantity(cartItemDto.getQuantity()); // Fix: Set the quantity from the cart item
+                orderItem.setQuantity(cartItemDto.getQuantity());
                 orderItem.setOrder(order);
-                orderItemRepository.save(orderItem);
+                orderItems.add(orderItem);
             }
+
+            orderItemRepository.saveAll(orderItems);
 
             cartService.deleteUserCartItems(customer);
         }
