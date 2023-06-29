@@ -32,7 +32,7 @@ import java.util.concurrent.CompletableFuture;
  */
 @Tag(name = "Cart", description = "These endpoints provides the capability to add, update and delete cart items")
 @RestController
-@RequestMapping("/api/food/carts")
+@RequestMapping("/api/v2/carts")
 public class CartController {
 
     private final CartService cartService;

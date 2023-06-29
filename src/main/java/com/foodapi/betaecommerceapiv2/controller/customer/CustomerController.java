@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Tag(name = "Authenticate User", description = "These endpoints provides the capability to register and authenticate Customers")
 @RestController
-@RequestMapping("/api/ecommerce/customers")
+@RequestMapping("/api/v2/customers")
 public class CustomerController {
 
     private final AuthenticationManager authenticationManager;

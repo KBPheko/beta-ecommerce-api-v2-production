@@ -30,7 +30,7 @@ import java.util.List;
 @Tag(name = "Product", description = "API endpoints to view, add, update, delete, and search products")
 @RestController
 @Slf4j
-@RequestMapping(value = "/api/product")
+@RequestMapping(value = "/api/v2/products")
 public class ProductController {
 
     private final ProductServiceImpl productService;
