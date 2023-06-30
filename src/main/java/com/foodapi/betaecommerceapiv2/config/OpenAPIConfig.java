@@ -25,6 +25,6 @@ public class OpenAPIConfig {
                 .version("1.0")
                 .description("This API exposes endpoints to an ecommerce api.");
 
-        return new OpenAPI().info(info);
+        return new OpenAPI().addServersItem(new Server().url("https://beta-ecommerce-api-v2-production-production.up.railway.app")).info(info);
     }
 }
