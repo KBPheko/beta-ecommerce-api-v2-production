@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * This class is a controller for the customer endpoints
  */
-@Tag(name = "Authenticate User", description = "These endpoints provides the capability to register and authenticate Customers")
+@Tag(name = "Authenticate Customer", description = "These endpoints provides the capability to register and authenticate Customers")
 @RestController
 @RequestMapping("/api/v2/customers")
 public class CustomerController {
