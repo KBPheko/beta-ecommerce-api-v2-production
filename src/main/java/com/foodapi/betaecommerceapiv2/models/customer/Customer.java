@@ -13,12 +13,12 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "This is the customer's id.", example = "1")
+    @Schema(description = "This is the customer's id.")
     private Long id;
 
     @Column(name = "first_name", nullable = false, length = 50)
     @NotBlank(message = "First name is required.")
-    @Schema(description = "This is the customer's first name.", example = "John")
+    @Schema(description = "This is the customer's first name.", example = "Mitchelle")
     private String firstName;
 
     @Column(name = "last_name", nullable = false, length = 50)
@@ -28,7 +28,7 @@ public class Customer {
 
     @Column(name = "email", nullable = false, length = 50)
     @NotBlank(message = "Email is required.")
-    @Schema(description = "This is the customer's email.", example = "johndoe@gmail.com")
+    @Schema(description = "This is the customer's email.", example = "mitchelle@gmail.com")
     private String email;
 
     @Column(name = "password", nullable = false, length = 128)
